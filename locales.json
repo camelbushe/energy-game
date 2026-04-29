@@ -1,6 +1,7 @@
 {
     "ru": {
         "card_warning_not_easible": "Не реализуемо на данный момент",
+        "card_button": "Добавить",
         "card_title_oil": "Нефть",
         "card_title_coal": "Уголь",
         "card_title_natural_gas": "Природный газ",

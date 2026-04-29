@@ -1,15 +1,95 @@
 import sources from '../sources.json' with {type: 'json'};
+import { getLocale } from './locales.js';
 
 const limits = {
     pollution: 0,
     efficiency: 0,
 }
 
+const progress = {
+    pollution: 0,
+    efficiency: 0,
+}
+
+let openedTooltips: Array<HTMLDivElement> = []
+
 sources.map(source => {
     limits.pollution = limits.pollution + source.pollution;
     limits.efficiency = limits.efficiency  + source.efficiency;
 })
 
+const cardsContainer = document.getElementById("cards-container-main");
+if (!cardsContainer) {
+    throw new Error("There is no provided cards container");
+}
+
+cardsContainer.style.position = "relative"
+
 sources.map(source => {
-    
+    const cardSize = 40;
+
+    const tooltipElement = document.createElement("div");
+    tooltipElement.classList.add("card_tooltip");
+    tooltipElement.style.position = "absolute"
+    const tooltipElementInnerHTML =
+    `
+        <h3 class="card_tooltip_title">
+            ${getLocale(`card_title_${source.name}`)}
+        </h3>
+        ${source.feasible === false ? 
+            `
+            <div class="card_tooltip_warning">
+                <svg width="10px" height="10px" viewBox="0 0 24 24"
+                    fill="none" xmlns="http://www.w3.org/2000/svg"
+                >
+                <path 
+                    d="M12 16.99V17M12 7V14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
+                    stroke="rgb(188, 28, 28)" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                </svg>
+                <span class="card_tooltip_warning_title">
+                    ${getLocale("card_warning_not_easible")}
+                </span>
+            </div>` :
+            ""
+        }
+        <button class="button">${getLocale("card_button")}</button>
+    `
+    tooltipElement.insertAdjacentHTML("afterbegin", tooltipElementInnerHTML)
+
+    tooltipElement.addEventListener('click', (event) => {
+        
+    })
+
+    const cardElement = document.createElement("img");
+    cardElement.classList.add("card");
+    cardElement.style.position= "absolute"
+    cardElement.src = source.image;
+
+    cardElement.style.width = cardSize + "px";
+    cardElement.style.height = cardSize + "px";
+
+    cardElement.style.left = 
+        Math.random() * (cardsContainer.clientWidth - cardSize) + "px";
+    cardElement.style.top =
+        Math.random() * (cardsContainer.clientHeight - cardSize) + "px";
+
+    cardElement.addEventListener("click", (event) => {
+        event.stopPropagation()
+        cardsContainer.insertAdjacentElement("afterend", tooltipElement);
+        openedTooltips = [...openedTooltips, tooltipElement]
+
+        tooltipElement.style.left = cardElement.style.left;
+        tooltipElement.style.top = cardElement.style.top;
+    })
+
+    cardsContainer.insertAdjacentElement("afterbegin", cardElement);
+})
+
+document.addEventListener("click", () => {
+    openedTooltips.forEach(tooltip => {
+        tooltip.remove()
+    })
+    openedTooltips = []
 })
