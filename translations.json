@@ -1,0 +1,19 @@
+{
+    "ru": {
+        "card_warning_not_easible": "Не реализуемо на данный момент",
+        "card_title_oil": "Нефть",
+        "card_title_coal": "Уголь",
+        "card_title_natural_gas": "Природный газ",
+        "card_title_nuclear": "Атомная энергия",
+        "card_title_hydro": "Гидроэнергетика (ГЭС)",
+        "card_title_wind": "Ветроэнергетика",
+        "card_title_solar": "Солнечная энергия",
+        "card_title_geothermal": "Геотермальная энергия",
+        "card_title_biomass": "Биомасса",
+        "card_title_hydrogen": "Водород",
+        "card_title_peat": "Торф",
+        "card_title_waste_to_energy": "Мусоросжигание",
+        "card_title_lava": "Лава",
+        "card_title_star_energy": "Энергия звёзд"
+    }
+}

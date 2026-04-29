@@ -1,0 +1,1 @@
+import sources from '../sources.json' with {type: 'json'};
