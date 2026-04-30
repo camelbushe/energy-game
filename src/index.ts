@@ -1,29 +1,52 @@
 import sources from '../sources.json' with {type: 'json'};
 import { getLocale } from './locales.js';
 
-const limits = {
-    pollution: 0,
-    efficiency: 0,
-}
+class Progress {
+    private progressBar;
+    private _value = 0;
 
-const progress = {
-    pollution: 0,
-    efficiency: 0,
+    constructor(progressBar: HTMLProgressElement, limit: number) {
+        this.progressBar = progressBar;
+        this.progressBar.max = limit;
+    }
+
+    set value(newValue: number) {
+        this._value = newValue;
+        this.progressBar.value = this._value;
+    }
+    get value() {
+        return this._value;
+    }
 }
 
 let openedTooltips: Array<HTMLDivElement> = []
 
+const limits = {
+    pollution: 0,
+    efficiency: 0,
+}
 sources.map(source => {
     limits.pollution = limits.pollution + source.pollution;
-    limits.efficiency = limits.efficiency  + source.efficiency;
+    limits.efficiency = limits.efficiency + source.efficiency;
 })
+
+const progress = {
+    pollution: new Progress(
+        document.getElementById("progress_bar-pollution") as HTMLProgressElement,
+        limits.pollution
+    ),
+    efficiency: new Progress(
+        document.getElementById("progress_bar-efficiency") as HTMLProgressElement,
+        limits.efficiency
+    ),
+}
 
 const cardsContainer = document.getElementById("cards-container-main");
 if (!cardsContainer) {
     throw new Error("There is no provided cards container");
 }
-
 cardsContainer.style.position = "relative"
+
 
 sources.map(source => {
     const cardSize = 40;
@@ -32,11 +55,11 @@ sources.map(source => {
     tooltipElement.classList.add("card_tooltip");
     tooltipElement.style.position = "absolute"
     const tooltipElementInnerHTML =
-    `
+        `
         <h3 class="card_tooltip_title">
             ${getLocale(`card_title_${source.name}`)}
         </h3>
-        ${source.feasible === false ? 
+        ${source.feasible === false ?
             `
             <div class="card_tooltip_warning">
                 <svg width="10px" height="10px" viewBox="0 0 24 24"
@@ -54,23 +77,34 @@ sources.map(source => {
             </div>` :
             ""
         }
-        <button class="button">${getLocale("card_button")}</button>
+        <button id="card_tooltip_button" class="button">
+            ${getLocale("card_button")}
+        </button>
     `
     tooltipElement.insertAdjacentHTML("afterbegin", tooltipElementInnerHTML)
 
     tooltipElement.addEventListener('click', (event) => {
-        
+        if (
+            event.target instanceof HTMLElement &&
+            event.target?.closest("#card_tooltip_button")
+        ) {
+            progress.pollution.value =
+                progress.pollution.value + source.pollution;
+            progress.efficiency.value =
+                progress.efficiency.value + source.efficiency;
+
+            cardElement.remove()
+        }
     })
 
     const cardElement = document.createElement("img");
     cardElement.classList.add("card");
-    cardElement.style.position= "absolute"
-    cardElement.src = source.image;
+    cardElement.style.position = "absolute";
 
     cardElement.style.width = cardSize + "px";
     cardElement.style.height = cardSize + "px";
 
-    cardElement.style.left = 
+    cardElement.style.left =
         Math.random() * (cardsContainer.clientWidth - cardSize) + "px";
     cardElement.style.top =
         Math.random() * (cardsContainer.clientHeight - cardSize) + "px";
@@ -83,6 +117,8 @@ sources.map(source => {
         tooltipElement.style.left = cardElement.style.left;
         tooltipElement.style.top = cardElement.style.top;
     })
+
+    cardElement.src = source.image;
 
     cardsContainer.insertAdjacentElement("afterbegin", cardElement);
 })

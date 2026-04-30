@@ -8,11 +8,19 @@
     <link rel="stylesheet" href="styles/index.css">
   </head>
   <body>
-    <header></header>
-    <main>
+    <main class="content">
+      <section class="content_progresses">
+        <div class="progress">
+        <label class="progress_title" for="progress_bar-pollution">Pollution</label>
+        <progress id="progress_bar-pollution" class="progress_bar" value="0"></progress>
+      </div>
+      <div class="progress">
+        <label class="progress_title" for="progress_bar-efficiency">Efficiency</label>
+        <progress id="progress_bar-efficiency" class="progress_bar" value="0"></progress>
+      </div>
+      </section>
       <div id="cards-container-main" class="cards-container"></div>
     </main>
-    <footer></footer>
   </body>
   <script src="./dist/index.js" type="module"></script>
 </html>
