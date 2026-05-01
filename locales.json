@@ -1,5 +1,11 @@
 {
     "ru": {
+        "gameOver_title_victory": "Победа!",
+        "gameOver_title_fail": "Вам не удалось сделать чистую энергетику",
+        "gameOver_button": "Играть заново",
+        "progresses_progress_title_pollution": "Загрязнение",
+        "progresses_progress_title_efficiency": "Эффективность",
+        "counter_title": "Осталось элементов: ",
         "card_warning_not_easible": "Не реализуемо на данный момент",
         "card_button": "Добавить",
         "card_title_oil": "Нефть",

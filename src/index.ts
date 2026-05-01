@@ -1,5 +1,5 @@
 import sources from '../sources.json' with {type: 'json'};
-import { getLocale } from './locales.js';
+import { getLocale, applyLocaleOn } from './locales.js';
 
 class Progress {
     private progressBar;
@@ -20,6 +20,45 @@ class Progress {
 }
 
 let openedTooltips: Array<HTMLDivElement> = []
+
+let counter = 5;
+const counterValue = document.getElementById("counter_value") as HTMLOutputElement;
+counterValue.textContent = counter.toString();
+
+function updateCounter() {
+    counter = counter - 1;
+    counterValue.textContent = counter.toString();
+    if (counter <= 0) {
+        let result: "fail" | "victory" = 
+        progress.pollution.value > 
+            progress.efficiency.value ? "fail" : "victory"
+
+        const gameOverElement = document.createElement("div");
+        gameOverElement.classList.add("game-over");
+        const gameOverElementHTML = 
+        `
+        <div class="game-over_window">
+            <h2 class="game-over_title ${result}">
+                ${getLocale(`gameOver_title_${result}`)}
+            </h2>
+            <button id="game-over_button" class="button">
+                ${getLocale("gameOver_button")}
+            </button>
+        </div>
+        `
+        gameOverElement.insertAdjacentHTML('afterbegin', gameOverElementHTML);
+        document.body.insertAdjacentElement('afterbegin', gameOverElement);
+
+        gameOverElement.addEventListener('click', (event) => {
+        if (
+            event.target instanceof HTMLElement &&
+            event.target?.closest("#game-over_button")
+        ) {
+            location.reload()
+        }
+    })
+    }
+}
 
 const limits = {
     pollution: 0,
@@ -45,15 +84,14 @@ const cardsContainer = document.getElementById("cards-container-main");
 if (!cardsContainer) {
     throw new Error("There is no provided cards container");
 }
-cardsContainer.style.position = "relative"
 
+applyLocaleOn(document)
 
 sources.map(source => {
     const cardSize = 40;
 
     const tooltipElement = document.createElement("div");
     tooltipElement.classList.add("card_tooltip");
-    tooltipElement.style.position = "absolute"
     const tooltipElementInnerHTML =
         `
         <h3 class="card_tooltip_title">
@@ -93,13 +131,14 @@ sources.map(source => {
             progress.efficiency.value =
                 progress.efficiency.value + source.efficiency;
 
+            
+            updateCounter()
             cardElement.remove()
         }
     })
 
     const cardElement = document.createElement("img");
     cardElement.classList.add("card");
-    cardElement.style.position = "absolute";
 
     cardElement.style.width = cardSize + "px";
     cardElement.style.height = cardSize + "px";

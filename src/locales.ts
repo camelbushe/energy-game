@@ -20,3 +20,12 @@ export function getLocale(code: string) {
 export function setCurrentLanguage(language: Language) {
     currentLanguage = language
 }
+
+export function applyLocaleOn(target: HTMLElement | Document) {
+    target.querySelectorAll("[data-locale]").forEach(element => {
+        const code = element.getAttribute("data-locale")
+        if (code) {
+            element.textContent = getLocale(code)
+        }
+    })
+}

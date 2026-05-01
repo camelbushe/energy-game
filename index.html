@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="utf-8">
-    <title>Экологическая энергия</title>
-    <link rel="stylesheet" href="styles/reset.css">
-    <link rel="stylesheet" href="styles/fonts.css">
-    <link rel="stylesheet" href="styles/index.css">
-  </head>
-  <body>
-    <main class="content">
-      <section class="content_progresses">
-        <div class="progress">
-        <label class="progress_title" for="progress_bar-pollution">Pollution</label>
+
+<head>
+  <meta charset="utf-8">
+  <title>Экологическая энергия</title>
+  <link rel="stylesheet" href="styles/reset.css">
+  <link rel="stylesheet" href="styles/fonts.css">
+  <link rel="stylesheet" href="styles/index.css">
+</head>
+
+<body>
+  <main class="content">
+    <section class="content_progresses">
+      <div class="progress">
+        <label class="progress_title" for="progress_bar-pollution"
+          data-locale="progresses_progress_title_pollution"></label>
         <progress id="progress_bar-pollution" class="progress_bar" value="0"></progress>
       </div>
       <div class="progress">
-        <label class="progress_title" for="progress_bar-efficiency">Efficiency</label>
+        <label class="progress_title" for="progress_bar-efficiency"
+          data-locale="progresses_progress_title_efficiency"></label>
         <progress id="progress_bar-efficiency" class="progress_bar" value="0"></progress>
       </div>
-      </section>
-      <div id="cards-container-main" class="cards-container"></div>
-    </main>
-  </body>
-  <script src="./dist/index.js" type="module"></script>
+    </section>
+    <div class="content_counter counter">
+      <span class="counter_title" data-locale="counter_title">Осталось элементов</span>
+      <output class="counter_value" id="counter_value"></output>
+    </div>
+    <div id="cards-container-main" class="cards-container"></div>
+  </main>
+</body>
+<script src="./dist/index.js" type="module"></script>
+
 </html>
