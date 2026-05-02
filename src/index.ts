@@ -2,63 +2,89 @@ import sources from '../sources.json' with {type: 'json'};
 import { getLocale, applyLocaleOn } from './locales.js';
 
 class Progress {
-    private progressBar;
+    private progressElement;
     private _value = 0;
 
-    constructor(progressBar: HTMLProgressElement, limit: number) {
-        this.progressBar = progressBar;
-        this.progressBar.max = limit;
+    constructor(progressElement: HTMLProgressElement, limit: number) {
+        this.progressElement = progressElement;
+        this.progressElement.max = limit;
     }
 
     set value(newValue: number) {
         this._value = newValue;
-        this.progressBar.value = this._value;
+        this.progressElement.value = this._value;
     }
     get value() {
         return this._value;
     }
 }
 
-let openedTooltips: Array<HTMLDivElement> = []
+class Counter {
+    private counterElement;
+    private _count = 5;
+    private onExpiration;
 
-let counter = 5;
-const counterValue = document.getElementById("counter_value") as HTMLOutputElement;
-counterValue.textContent = counter.toString();
+    constructor(counterElement: HTMLElement, onExpiration: Function) {
+        this.counterElement = counterElement;
+        this.onExpiration = onExpiration;
 
-function updateCounter() {
-    counter = counter - 1;
-    counterValue.textContent = counter.toString();
-    if (counter <= 0) {
-        let result: "fail" | "victory" = 
-        progress.pollution.value > 
-            progress.efficiency.value ? "fail" : "victory"
+        this.counterElement.textContent = this._count.toString();
+    }
 
-        const gameOverElement = document.createElement("div");
-        gameOverElement.classList.add("game-over");
-        const gameOverElementHTML = 
-        `
-        <div class="game-over_window">
-            <h2 class="game-over_title ${result}">
-                ${getLocale(`gameOver_title_${result}`)}
-            </h2>
-            <button id="game-over_button" class="button">
-                ${getLocale("gameOver_button")}
-            </button>
-        </div>
-        `
-        gameOverElement.insertAdjacentHTML('afterbegin', gameOverElementHTML);
-        document.body.insertAdjacentElement('afterbegin', gameOverElement);
-
-        gameOverElement.addEventListener('click', (event) => {
-        if (
-            event.target instanceof HTMLElement &&
-            event.target?.closest("#game-over_button")
-        ) {
-            location.reload()
+    public update() {
+        const next = this._count - 1;
+        if (next >= 0) {
+            this._count = next;
+            this.counterElement.textContent = this._count.toString();
         }
-    })
+        if (next <= 0) {
+            this.onExpiration();
+        }
     }
 }
+
+type ElementsIdsMap = { [key: string]: globalThis.Element };
+interface CreateElementOptions {
+    tagName: string,
+    className: string,
+    html?: string,
+    effect?: (elements: ElementsIdsMap) => any
+}
+class Element<E extends HTMLElement> {
+    private options;
+
+    constructor(options: CreateElementOptions) {
+        this.options = options;
+
+        this.element = document.createElement(this.options.tagName) as E;
+        this.element.classList.add(this.options.className);
+        if (this.options.html) {
+            this.element.insertAdjacentHTML('afterbegin', this.options.html);
+        }
+
+        const elementsWithIds = this.element.querySelectorAll('[id]');
+        const elementsIdsMap: ElementsIdsMap = {};
+        elementsWithIds.forEach(element => {
+            const idAttribute = element.getAttribute('id')
+            if (idAttribute) {
+                elementsIdsMap[idAttribute] = element;
+            }
+        })
+        
+        const observer = new MutationObserver(() => {
+            if (document.contains(this.element) && this.options.effect) {
+                this.options.effect(elementsIdsMap);
+                observer.disconnect()
+            }
+        })
+        observer.observe(document.documentElement, {childList: true, subtree: true})
+    }
+
+    public element: E;
+}
+
+
+let openedTooltips: Array<HTMLElement> = []
 
 const limits = {
     pollution: 0,
@@ -80,6 +106,36 @@ const progress = {
     ),
 }
 
+const counter = new Counter(
+    document.getElementById("counter_value") as HTMLAnchorElement,
+    () => {
+        const result: "fail" | "victory" = progress.pollution.value >
+            progress.efficiency.value ? "fail" : "victory";
+
+        const gameOverElement = new Element({
+            tagName: "div",
+            className: "game-over",
+            html:
+                `
+            <div class="game-over_window">
+                <h2 class="game-over_title ${result}">
+                    ${getLocale(`gameOver_title_${result}`)}
+                </h2>
+                <button id="game-over_button" class="button">
+                    ${getLocale("gameOver_button")}
+                </button>
+            </div>
+            `,
+            effect: (elements) => {
+                elements["game-over_button"]?.addEventListener('click', () => {
+                    location.reload()
+                })
+            }
+        })
+        document.body.insertAdjacentElement('afterbegin', gameOverElement.element)
+    }
+)
+
 const cardsContainer = document.getElementById("cards-container-main");
 if (!cardsContainer) {
     throw new Error("There is no provided cards container");
@@ -90,15 +146,16 @@ applyLocaleOn(document)
 sources.map(source => {
     const cardSize = 40;
 
-    const tooltipElement = document.createElement("div");
-    tooltipElement.classList.add("card_tooltip");
-    const tooltipElementInnerHTML =
-        `
+    const tooltipElement = new Element({
+        tagName: "div",
+        className: "card_tooltip",
+        html:
+            `
         <h3 class="card_tooltip_title">
             ${getLocale(`card_title_${source.name}`)}
         </h3>
         ${source.feasible === false ?
-            `
+                `
             <div class="card_tooltip_warning">
                 <svg width="10px" height="10px" viewBox="0 0 24 24"
                     fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -113,53 +170,50 @@ sources.map(source => {
                     ${getLocale("card_warning_not_easible")}
                 </span>
             </div>` :
-            ""
-        }
+                ""
+            }
         <button id="card_tooltip_button" class="button">
             ${getLocale("card_button")}
         </button>
-    `
-    tooltipElement.insertAdjacentHTML("afterbegin", tooltipElementInnerHTML)
+        `,
+        effect: (elements) => {
+            elements["card_tooltip_button"]?.addEventListener('click', () => {
+                counter.update();
 
-    tooltipElement.addEventListener('click', (event) => {
-        if (
-            event.target instanceof HTMLElement &&
-            event.target?.closest("#card_tooltip_button")
-        ) {
-            progress.pollution.value =
-                progress.pollution.value + source.pollution;
-            progress.efficiency.value =
-                progress.efficiency.value + source.efficiency;
+                progress.pollution.value =
+                    progress.pollution.value + source.pollution;
+                progress.efficiency.value =
+                    progress.efficiency.value + source.efficiency;
 
-            
-            updateCounter()
-            cardElement.remove()
+                cardElement.element.remove()
+            })
         }
     })
 
-    const cardElement = document.createElement("img");
-    cardElement.classList.add("card");
-
-    cardElement.style.width = cardSize + "px";
-    cardElement.style.height = cardSize + "px";
-
-    cardElement.style.left =
-        Math.random() * (cardsContainer.clientWidth - cardSize) + "px";
-    cardElement.style.top =
-        Math.random() * (cardsContainer.clientHeight - cardSize) + "px";
-
-    cardElement.addEventListener("click", (event) => {
-        event.stopPropagation()
-        cardsContainer.insertAdjacentElement("afterend", tooltipElement);
-        openedTooltips = [...openedTooltips, tooltipElement]
-
-        tooltipElement.style.left = cardElement.style.left;
-        tooltipElement.style.top = cardElement.style.top;
+    const cardElement = new Element<HTMLImageElement>({
+        tagName: "img",
+        className: "card"
     })
 
-    cardElement.src = source.image;
+    cardElement.element.style.width = cardSize + "px";
+    cardElement.element.style.height = cardSize + "px";
 
-    cardsContainer.insertAdjacentElement("afterbegin", cardElement);
+    cardElement.element.style.left =
+        Math.random() * (cardsContainer.clientWidth - cardSize) + "px";
+    cardElement.element.style.top =
+        Math.random() * (cardsContainer.clientHeight - cardSize) + "px";
+
+    cardElement.element.addEventListener("click", (event) => {
+        event.stopPropagation()
+        cardsContainer.insertAdjacentElement('afterbegin', tooltipElement.element)
+        openedTooltips = [...openedTooltips, tooltipElement.element]
+
+        tooltipElement.element.style.left = cardElement.element.style.left;
+        tooltipElement.element.style.top = cardElement.element.style.top;
+    })
+
+    cardElement.element.src = source.image;
+    cardsContainer.insertAdjacentElement('afterbegin', cardElement.element);
 })
 
 document.addEventListener("click", () => {

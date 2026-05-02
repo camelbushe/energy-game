@@ -125,6 +125,7 @@ button {
     flex-direction: column;
     gap: 5px;
     position: absolute;
+    z-index: 50;
 }
 
 .card_tooltip_title {
