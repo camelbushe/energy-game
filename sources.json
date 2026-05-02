@@ -3,86 +3,86 @@
     "name": "coal",
     "pollution": 100,
     "efficiency": 60,
-    "image": "/assets/icons/coal.svg"
+    "image": "./assets/icons/coal.svg"
   },
   {
     "name": "oil",
     "pollution": 90,
     "efficiency": 70,
-    "image": "/assets/icons/oil.svg"
+    "image": "./assets/icons/oil.svg"
   },
   {
     "name": "natural_gas",
     "pollution": 60,
     "efficiency": 80,
-    "image": "/assets/icons/natural_gas.svg"
+    "image": "./assets/icons/natural_gas.svg"
   },
   {
     "name": "nuclear",
     "pollution": 5,
     "efficiency": 100,
-    "image": "/assets/icons/nuclear.svg"
+    "image": "./assets/icons/nuclear.svg"
   },
   {
     "name": "hydro",
     "pollution": 20,
     "efficiency": 90,
-    "image": "/assets/icons/hydro.svg"
+    "image": "./assets/icons/hydro.svg"
   },
   {
     "name": "wind",
     "pollution": 5,
     "efficiency": 45,
-    "image": "/assets/icons/wind.svg"
+    "image": "./assets/icons/wind.svg"
   },
   {
     "name": "solar",
     "pollution": 10,
     "efficiency": 35,
-    "image": "/assets/icons/solar.svg"
+    "image": "./assets/icons/solar.svg"
   },
   {
     "name": "geothermal",
     "pollution": 15,
     "efficiency": 85,
-    "image": "/assets/icons/geothermal.svg"
+    "image": "./assets/icons/geothermal.svg"
   },
   {
     "name": "biomass",
     "pollution": 75,
     "efficiency": 40,
-    "image": "/assets/icons/biomass.svg"
+    "image": "./assets/icons/biomass.svg"
   },
   {
     "name": "hydrogen",
     "pollution": 5,
     "efficiency": 75,
-    "image": "/assets/icons/hydrogen.svg"
+    "image": "./assets/icons/hydrogen.svg"
   },
   {
     "name": "peat",
     "pollution": 95,
     "efficiency": 30,
-    "image": "/assets/icons/peat.svg"
+    "image": "./assets/icons/peat.svg"
   },
   {
     "name": "waste_to_energy",
     "pollution": 70,
     "efficiency": 50,
-    "image": "/assets/icons/waste_to_energy.svg"
+    "image": "./assets/icons/waste_to_energy.svg"
   },
   {
     "name": "lava",
     "pollution": 15,
     "efficiency": 85,
-    "image": "/assets/icons/lava.svg",
+    "image": "./assets/icons/lava.svg",
     "feasible": false
   },
   {
     "name": "star_energy",
     "pollution": 15,
     "efficiency": 85,
-    "image": "/assets/icons/star_energy.svg",
+    "image": "./assets/icons/star_energy.svg",
     "feasible": false
   }
 ]
