@@ -1,8 +1,12 @@
 {
     "ru": {
         "gameOver_title_victory": "Победа!",
-        "gameOver_title_fail": "Вам не удалось сделать чистую энергетику",
+        "gameOver_title_fail": "Поражение",
+        "gameOver_description_victory": "Поздравляем. Вам удалось найти баланс",
+        "gameOver_description_fail": "Вы не смогли найти баланс. Повезёт в следующий раз",
         "gameOver_button": "Играть заново",
+        "header_title": "Баланс энергии",
+        "header_description": "Найдите баланс между эффективностью и загрязнением",
         "progresses_progress_title_pollution": "Загрязнение",
         "progresses_progress_title_efficiency": "Эффективность",
         "counter_title": "Осталось элементов: ",

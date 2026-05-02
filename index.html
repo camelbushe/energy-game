@@ -10,7 +10,15 @@
 </head>
 
 <body>
+  <header class="header">
+    <h1 class="header_title" data-locale="header_title"></h1>
+    <span class="header_description" data-locale="header_description"></span>
+  </header>
   <main class="content">
+    <div class="content_counter counter">
+      <span class="counter_title" data-locale="counter_title">Осталось элементов</span>
+      <output class="counter_value" id="counter_value"></output>
+    </div>
     <section class="content_progresses">
       <div class="progress">
         <label class="progress_title" for="progress_bar-pollution"
@@ -23,10 +31,6 @@
         <progress id="progress_bar-efficiency" class="progress_bar" value="0"></progress>
       </div>
     </section>
-    <div class="content_counter counter">
-      <span class="counter_title" data-locale="counter_title">Осталось элементов</span>
-      <output class="counter_value" id="counter_value"></output>
-    </div>
     <div id="cards-container-main" class="cards-container"></div>
   </main>
 </body>

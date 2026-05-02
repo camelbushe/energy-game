@@ -70,19 +70,13 @@ class Element<E extends HTMLElement> {
                 elementsIdsMap[idAttribute] = element;
             }
         })
-        
-        const observer = new MutationObserver(() => {
-            if (document.contains(this.element) && this.options.effect) {
-                this.options.effect(elementsIdsMap);
-                observer.disconnect()
-            }
-        })
-        observer.observe(document.documentElement, {childList: true, subtree: true})
+        if (this.options.effect) {
+            this.options.effect(elementsIdsMap);
+        }
     }
 
     public element: E;
 }
-
 
 let openedTooltips: Array<HTMLElement> = []
 
@@ -118,9 +112,12 @@ const counter = new Counter(
             html:
                 `
             <div class="game-over_window">
-                <h2 class="game-over_title ${result}">
+                <h2 class="game-over_title">
                     ${getLocale(`gameOver_title_${result}`)}
                 </h2>
+                <span class="game-over_description">
+                    ${getLocale(`gameOver_description_${result}`)}
+                </span>
                 <button id="game-over_button" class="button">
                     ${getLocale("gameOver_button")}
                 </button>
