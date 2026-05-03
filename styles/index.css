@@ -46,13 +46,18 @@ button {
     appearance: none;
 }
 
-.progress_bar,
+.progress_bar {
+    border-radius: 10px;
+    background-color: lightgray;
+}
 .progress_bar::-webkit-progress-bar {
     border-radius: 10px;
     background-color: lightgray;
 }
 
-.progress_bar::-moz-progress-bar,
+.progress_bar::-moz-progress-bar {
+    border-radius: 10px;
+}
 .progress_bar::-webkit-progress-value {
     border-radius: 10px;
 }
@@ -153,12 +158,16 @@ button {
     max-width: 400px;
 }
 
-#progress_bar-pollution::-moz-progress-bar,
+#progress_bar-pollution::-moz-progress-bar {
+    background: linear-gradient(90deg, rgba(252, 176, 69, 1) 0%, rgba(253, 29, 29, 1) 100%);
+}
 #progress_bar-pollution::-webkit-progress-value {
     background: linear-gradient(90deg, rgba(252, 176, 69, 1) 0%, rgba(253, 29, 29, 1) 100%);
 }
 
-#progress_bar-efficiency::-moz-progress-bar,
+#progress_bar-efficiency::-moz-progress-bar {
+    background: linear-gradient(90deg, rgb(179, 252, 69) 0%, rgba(36, 214, 57, 1) 32%);
+}
 #progress_bar-efficiency::-webkit-progress-value {
     background: linear-gradient(90deg, rgb(179, 252, 69) 0%, rgba(36, 214, 57, 1) 32%);
 }
