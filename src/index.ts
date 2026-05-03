@@ -154,7 +154,7 @@ sources.map(source => {
         ${source.feasible === false ?
                 `
             <div class="card_tooltip_warning">
-                <svg width="10px" height="10px" viewBox="0 0 24 24"
+                <svg width="20px" height="20px" viewBox="0 0 24 24"
                     fill="none" xmlns="http://www.w3.org/2000/svg"
                 >
                 <path 
@@ -203,10 +203,34 @@ sources.map(source => {
     cardElement.element.addEventListener("click", (event) => {
         event.stopPropagation()
         cardsContainer.insertAdjacentElement('afterbegin', tooltipElement.element)
-        openedTooltips = [...openedTooltips, tooltipElement.element]
+        openedTooltips = [...openedTooltips, tooltipElement.element];
 
         tooltipElement.element.style.left = cardElement.element.style.left;
         tooltipElement.element.style.top = cardElement.element.style.top;
+
+        const tooltipRect = tooltipElement.element.getBoundingClientRect();
+        const cardsContainerRect = cardsContainer.getBoundingClientRect();
+
+        const tooltipRightBorder = tooltipRect.right;
+        const tooltipBottomBorder = tooltipRect.bottom;
+        const cardsContainerRightBorder = cardsContainerRect.right;
+        const cardsContainerBottomBorder = cardsContainerRect.bottom;
+        
+        if (tooltipRightBorder > cardsContainerRightBorder) {
+            const deltaRight = tooltipRightBorder - cardsContainerRightBorder;
+
+            tooltipElement.element.style.left = 
+                (tooltipRect.left - cardsContainerRect.left - deltaRight) +
+                    "px";
+        };
+        if (tooltipBottomBorder > cardsContainerBottomBorder) {
+            const deltaBottom = tooltipBottomBorder - cardsContainerBottomBorder;
+
+            tooltipElement.element.style.top =
+                (tooltipRect.top - cardsContainerRect.top - deltaBottom) +
+                    "px";
+        }
+
     })
 
     cardElement.element.src = source.image;
